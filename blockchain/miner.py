@@ -25,6 +25,11 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
+    
+    #loop through the possibilities, checking each one against valid proof to try to find a valid proof, then return
+    #if proof isn't found then increase and keep searching 
+    while valid_proof(last_proof, proof) is False:
+        proof += 1
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -40,7 +45,20 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    
+    #created a new proof to check against last proof, will replace the class algorithm that checked for leading zeroes 
+    #encode and turn in bytes 
+    new_proof = f'{last_hash}'.encode()
+    #hash it for security purposes, turn into hexadecimal format 
+    new_proof_hashed = hashlib.sha256(new_proof).hexdigest()
+    
+    
+    last_proof_match = f'{proof}'.encode()
+    last_proof_match_hashed = hashlib.sha256(last_proof_match).hexdigest()
+        
+    #checking for where last 6 digits are equal to first six digits
+    #Increasing the leading digits, increases runtime
+    return last_proof_match_hashed[:6] == new_proof_hashed[-6:]
 
 
 if __name__ == '__main__':
